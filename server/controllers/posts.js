@@ -4,7 +4,7 @@ export const getPosts = async (req, res) => {
     try {
         const postMessages = await PostMessage.find();
             // Vu que le PostMessage "demande du temps", il nous faut alors passer en asynchrone et donc également ajouter un await
-        console.log(PostMessages);
+        console.log(postMessages);
         res.status(200).json(postMessages);
             // Petit rappel : 
             // 200 : succès de la requête ;
@@ -19,8 +19,20 @@ export const getPosts = async (req, res) => {
     }
 }
 
-export const createPost = (req, res) => {
-    res.send("Post Creation");
+export const createPost = async (req, res) => {
+        // Pour rappel, request & response
+    const post = req.body;
+
+    const newPost = new PostMessage(post);
+
+    try {
+        await newPost.save();
+
+        res.status(201).json(newPost);
+    } catch (error) {
+        req.status(490).json({ message: error.message });
+    };
+
 }
 
 // Pour rappel on ne peut pas avoir plusieurs default export
